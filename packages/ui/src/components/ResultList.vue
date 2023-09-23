@@ -1,12 +1,5 @@
-<script setup lang="ts">
-import type { PageInfo } from '../type';
-
-interface IProps {
-  pages: PageInfo[]
-  selectedPage?: PageInfo
-}
-
-defineProps<IProps>()
+<script setup>
+defineProps()
 </script>
 
 <template>
