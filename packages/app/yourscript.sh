@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 输入你的密码
-myPassword="666888"
+myPassword="$MY_PASSWORD"
 
 # 检查是否需要输入密码
 requirePassword=$(/usr/bin/pmset -g | /usr/bin/grep hibernatemode | /usr/bin/awk '{print $2}' | tr -d '\n')

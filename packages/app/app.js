@@ -6,6 +6,8 @@ const fs = require('fs');
 const db = require('./db')
 const { sleep_mac } = require('./sleep_mac')
 
+require('dotenv').config()
+
 var jsonParser = bodyParser.json()
 
 const app = express()
