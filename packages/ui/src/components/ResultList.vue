@@ -1,5 +1,9 @@
 <script setup>
-defineProps()
+defineProps(
+  ['selectedPage', 'pages']
+)
+
+defineEmits(['onChange'])
 </script>
 
 <template>

@@ -1,7 +1,5 @@
 <script setup>
-defineProps({
-  show: Boolean
-})
+defineProps(['show'])
 </script>
 
 <template>
