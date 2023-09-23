@@ -1,0 +1,12 @@
+{
+  "name": "tab-manage-extension",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "pnpm --stream -r dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
