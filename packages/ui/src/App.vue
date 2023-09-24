@@ -5,6 +5,8 @@ import MaterialSymbolsEditRounded from './components/MaterialSymbolsEditRounded.
 import ResultList from './components/ResultList.vue'
 import Modal from './components/Modal.vue'
 
+import TimerSettingDIalog from './components/TimerSettingDIalog.vue'
+
 import { closePage, dispatch, getPages } from './shared'
 
 
@@ -157,6 +159,8 @@ function start() {
 
 <template>
   <div class="title">页面管理</div>
+
+  <TimerSettingDIalog />
 
   <div class="actions">
     <button :disabled="!selectedPage" @click="start">{{ statusMap[status] }}</button>
