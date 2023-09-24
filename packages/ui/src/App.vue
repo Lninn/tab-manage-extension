@@ -24,6 +24,8 @@ const seconds = ref(0)
 const showModal = ref(false)
 const formValue = ref()
 
+const numberOfMinutes = ref(30)
+
 const secondOpts = [
   5,
   10,
@@ -160,7 +162,7 @@ function start() {
 <template>
   <div class="title">页面管理</div>
 
-  <TimerSettingDIalog />
+  <TimerSettingDIalog :numberOfMinutes="numberOfMinutes" />
 
   <div class="actions">
     <button :disabled="!selectedPage" @click="start">{{ statusMap[status] }}</button>

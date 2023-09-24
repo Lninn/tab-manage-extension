@@ -1,12 +1,14 @@
 <script setup>
 import { ref, reactive } from 'vue'
 
+defineProps(['numberOfMinutes'])
+
 const secondOpts = [
-  5,
   10,
-  20,
-  45 * 60,
-  120 * 60
+  30,
+  45,
+  60,
+  120,
 ]
 
 const visible = ref(false)
@@ -36,7 +38,7 @@ const form = reactive({
       </el-form-item>
       <el-form-item label="时间值" v-if="form.type === '1'">
         <el-select v-model="form.date1">
-          <el-option v-for="item in secondOpts" :key="item" :label="item + '秒'" :value="item" />
+          <el-option v-for="item in secondOpts" :key="item" :label="item + '分钟'" :value="item" />
         </el-select>
       </el-form-item>
       <el-form-item label="时间值" v-if="form.type === '2'">
@@ -50,7 +52,7 @@ const form = reactive({
           </div>
           <div class="item">
             <span class="item-label">分钟数</span>
-            <span>200 分钟</span>
+            <span>200 分钟 {{ numberOfMinutes }}</span>
           </div>
         </div>
       </el-form-item>
