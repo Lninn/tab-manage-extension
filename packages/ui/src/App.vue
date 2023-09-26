@@ -1,10 +1,7 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 
-import MaterialSymbolsEditRounded from './components/MaterialSymbolsEditRounded.vue'
 import ResultList from './components/ResultList.vue'
-import Modal from './components/Modal.vue'
-
 import TimerSettingDIalog from './components/TimerSettingDIalog.vue'
 
 import { closePage, dispatch, getPages } from './shared'
@@ -19,20 +16,10 @@ const pages = ref([])
 const selectedPage = ref()
 const status = ref('unStart')
 const timerId = ref()
-const totalSends = ref(5)
 const seconds = ref(0)
-const showModal = ref(false)
-const formValue = ref()
 
 const numberOfMinutes = ref(30)
-
-const secondOpts = [
-  5,
-  10,
-  20,
-  45 * 60,
-  120 * 60
-]
+const totalSends = computed(() => numberOfMinutes.value * 60)
 
 async function refreshData() {
   const data = await getPages()
@@ -80,15 +67,6 @@ async function handleClosePage() {
     selectedPage.value = undefined
 
     refreshData()
-  }
-}
-
-function onClose() {
-  showModal.value = false
-
-  const newVal = formValue.value
-  if (newVal) {
-    totalSends.value = newVal
   }
 }
 
@@ -157,45 +135,23 @@ function start() {
   }, 1000)
 }
 
+function onTimeOptChange(value) {
+  numberOfMinutes.value = value
+}
 </script>
 
 <template>
   <div class="title">页面管理</div>
 
-  <TimerSettingDIalog :numberOfMinutes="numberOfMinutes" />
-
   <div class="actions">
     <button :disabled="!selectedPage" @click="start">{{ statusMap[status] }}</button>
-    <div class="seconds">倒计时：{{ totalSends - seconds }}</div>
-    <MaterialSymbolsEditRounded
-      :style="{ 'font-size': 16, cursor: 'pointer' }"
-      @click="showModal = true"
-      :disabled="status==='runnning'"
-    />
+    <div class="seconds">倒计时：{{ totalSends - seconds }} 秒（{{ numberOfMinutes }} 分钟）</div>
+    <TimerSettingDIalog @update="onTimeOptChange" />
     <button :disabled="!selectedPage" @click="handleClosePage">关闭页面</button>
     <button @click="saveData">Save Data</button>
   </div>
 
   <ResultList :pages="pages" :selectedPage="selectedPage" @onChange="onChange" />
-
-  <Teleport to="body">
-    <!-- 使用这个 modal 组件，传入 prop -->
-    <modal
-      :show="showModal"
-      @close="onClose"
-    >
-      <template #header>
-        <h3>Second List Option</h3>
-      </template>
-      <template #body>
-        <select v-model="formValue">
-          <option v-for="item in secondOpts" :value="item">
-            {{ item }} 秒
-          </option>
-        </select>
-      </template>
-    </modal>
-  </Teleport>
 </template>
 
 <style>
