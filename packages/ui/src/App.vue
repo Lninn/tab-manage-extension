@@ -3,8 +3,8 @@ import { onMounted, ref, computed } from 'vue';
 
 import ResultList from './components/ResultList.vue'
 import TimerSettingDIalog from './components/TimerSettingDIalog.vue'
-
-import { closePage, dispatch, getPages } from './shared'
+import { closePage } from './shared'
+import usePage from './composables/use-page'
 
 
 const statusMap = {
@@ -12,7 +12,8 @@ const statusMap = {
   runnning: '运行中(点击取消)'
 }
 
-const pages = ref([])
+const { pages, refreshData } = usePage()
+
 const selectedPage = ref()
 const status = ref('unStart')
 const timerId = ref()
@@ -21,26 +22,6 @@ const seconds = ref(0)
 const numberOfMinutes = ref(30)
 const totalSends = computed(() => numberOfMinutes.value * 60)
 
-async function refreshData() {
-  const data = await getPages()
-  pages.value = data
-}
-
-onMounted(() => {
-  refreshData()
-
-  dispatch(() => {
-    refreshData()
-  })
-
-  if (import.meta.env.DEV) {
-    fetch('http://localhost:3000/pageData')
-    .then(res => res.json())
-    .then(res => {
-      pages.value = res.data
-    })
-  }
-})
 
 function sleepMac() {
   fetch('http://localhost:3000/sleepMac')
@@ -66,7 +47,7 @@ async function handleClosePage() {
     await closePage(item.id)
     selectedPage.value = undefined
 
-    refreshData()
+    await refreshData()
   }
 }
 
@@ -75,7 +56,7 @@ async function end() {
 
   if (selectedPage.value) {
     await closePage(selectedPage.value.id)
-    refreshData()
+    await refreshData()
     sleepMac()
   }
 }

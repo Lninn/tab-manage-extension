@@ -38,6 +38,6 @@ function setup() {
 
 setup()
 
-export function dispatch(fn) {
+export function register(fn) {
   list.push(fn)
 }
