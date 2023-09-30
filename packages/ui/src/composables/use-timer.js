@@ -46,7 +46,7 @@ export default function useTimer(props) {
   }
 
   function start() {
-    if (isRunning(status)) {
+    if (isRunning(status.value)) {
       cancalTimer()
     } else {
       if (!selectedPage.value) {
