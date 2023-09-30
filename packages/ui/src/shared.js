@@ -20,24 +20,31 @@ export async function closePage(id) {
   await chrome.tabs.remove(id)
 }
 
-const list = []
+class TabEvt {
+  constructor() {
+    this.evts = []
+    this.run = this.run.bind(this)
 
-function run() {
-  for (const fn of list) {
-    fn()
+    this.setup()
+  }
+
+  setup() {
+    if (import.meta.env.DEV) return
+
+    chrome.tabs.onCreated.addListener(this.run)
+    chrome.tabs.onRemoved.addListener(this.run)
+    chrome.tabs.onUpdated.addListener(this.run)
+  }
+
+  register(fn) {
+    this.evts.push(fn)
+  }
+
+  run() {
+    for (const fn of this.evts) {
+      fn()
+    }
   }
 }
 
-function setup() {
-  if (import.meta.env.DEV) return
-
-  chrome.tabs.onCreated.addListener(run)
-  chrome.tabs.onRemoved.addListener(run)
-  chrome.tabs.onUpdated.addListener(run)
-}
-
-setup()
-
-export function register(fn) {
-  list.push(fn)
-}
+export const tabEvt = new TabEvt()

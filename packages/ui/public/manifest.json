@@ -6,6 +6,9 @@
   "background": {
     "service_worker": "background.js"
   },
+  "action": {
+    "default_title": "click me"
+  },
   "permissions": [
     "tabs"
   ]

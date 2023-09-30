@@ -1,4 +1,4 @@
-import { register, getPages } from '../shared'
+import { tabEvt, getPages } from '../shared'
 import { onMounted, ref } from 'vue'
 
 export default function usePage() {
@@ -21,8 +21,8 @@ export default function usePage() {
   }
 
   onMounted(async () => {
-    register(() => {
-      refreshData()
+    tabEvt.register(() => {
+      init()
     })
   
     await init()
