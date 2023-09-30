@@ -5,6 +5,7 @@ import MaterialSymbolsEditRounded from './MaterialSymbolsEditRounded.vue'
 const emit = defineEmits(['update'])
 
 const minuteOpts = [
+  1,
   10,
   30,
   45,

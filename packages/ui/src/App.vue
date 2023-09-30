@@ -1,35 +1,25 @@
 <script setup>
-import { onMounted, ref, computed } from 'vue';
-
+import { ref, computed } from 'vue';
 import ResultList from './components/ResultList.vue'
 import TimerSettingDIalog from './components/TimerSettingDIalog.vue'
 import { closePage } from './shared'
 import usePage from './composables/use-page'
+import useTimer, { statusMap } from './composables/use-timer'
 
 
-const statusMap = {
-  unStart: '启动定时',
-  runnning: '运行中(点击取消)'
-}
-
-const { pages, refreshData } = usePage()
-
-const selectedPage = ref()
-const status = ref('unStart')
-const timerId = ref()
-const seconds = ref(0)
+const selectedPage = ref(null)
 
 const numberOfMinutes = ref(30)
-const totalSends = computed(() => numberOfMinutes.value * 60)
+const totalSends = computed(() => {
+  if (numberOfMinutes.value === 1) {
+    return 5
+  } else {
+    return numberOfMinutes.value * 60
+  }
+})
 
-
-function sleepMac() {
-  fetch('http://localhost:3000/sleepMac')
-    .then(res => res.json())
-    .then(res => {
-      console.log('debhug ', res)
-    })
-}
+const { pages, refreshData } = usePage()
+const { start, status, seconds } = useTimer({ selectedPage, totalSends, refreshData })
 
 function onChange(pageInfo) {
   if (selectedPage.value) {
@@ -49,23 +39,6 @@ async function handleClosePage() {
 
     await refreshData()
   }
-}
-
-async function end() {
-  cancalTimer()
-
-  if (selectedPage.value) {
-    await closePage(selectedPage.value.id)
-    await refreshData()
-    sleepMac()
-  }
-}
-
-function cancalTimer() {
-  status.value = 'unStart'
-  clearInterval(timerId.value)
-  timerId.value = undefined
-  seconds.value = 0
 }
 
 async function postJSON(url, data) {
@@ -90,30 +63,6 @@ function saveData() {
     'http://localhost:3000/pageData',
     pages.value
   )
-}
-
-function start() {
-
-  if (status.value === 'unStart') {
-    if (!selectedPage.value) {
-      console.log('请选择一个页面')
-      return
-    }
-
-    status.value = 'runnning'
-  } else if (status.value === 'runnning') {
-    // 取消
-    cancalTimer()
-    return
-  }
-
-  timerId.value = setInterval(() => {
-    seconds.value++
-
-    if (seconds.value === totalSends.value) {
-      end()
-    }
-  }, 1000)
 }
 
 function onTimeOptChange(value) {
